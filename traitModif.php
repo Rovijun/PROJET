@@ -1,15 +1,19 @@
 <?php
   include ("fonction/lib.php");
-  errorLog(); // Je là desactive pour la recherche vide
+  //errorLog(); // Je là desactive pour la recherche vide
   include "template/header.php";
   include "template/menu.php";
 
   //Connexion BDD
   $bdd = connectDB();
   $voiture = afficheVoiture();
+  //recup Voiture
+  $agence = afficheAgence();
+  $type = afficheType();
+  $image = afficheImage();
 ?>
 
-<h3>Modification voiture</h3>
+<h3>Modification voiture :</h3>
 
 <?php
 if(isset($_POST['choix'])){
@@ -19,112 +23,117 @@ if(isset($_POST['choix'])){
   );
     $res = selectVoitAll($multi);
   }
-//  print_r($res); // Vérification des données entrées
+  //print_r($res); // Vérification des données entrées
 }
 
 ?>
-<div class="row justify-content text-center">
-  <div class="col-md-3">
-    <?php foreach($res as $marque) { ?>
-      <label><?=$marque['Marque']?></label>
-    <?php } ?>
+
+<form class="" action="" method="post">
+  <table class="table table-striped table-dark">
+      <thead>
+          <tr>
+              <th>Marques</th>
+              <th>Types</th>
+              <th>Agences</th>
+              <th>Images</th>
+          </tr>
+      </thead>
+      <tbody>
+          <?php foreach ($res as $Search) { ?>
+              <tr>
+                  <td><?=$Search['Marque']?></td>
+                  <td><?=$Search['Type']?></td>
+                  <td><?=$Search['Agence']?></td>
+                  <td>
+                    <img src="assets/img/<?=$Search['Image']?>" class="img-fluid imgCar"/>
+                  </td>
+              </tr>
+          <?php } ?>
+      </tbody>
+  </table>
+</form>
+
+<form enctype="multipart/form-data" action="" method="post">
+<div class="row">
+  <div class="col-md-2">
+    <input class="form-control" type="text" name="marque" placeholder="Marque"><br>
   </div>
-  <div class="col-md-3">
-    <?php foreach($res as $types) { ?>
-    <label><?=$types['idTYPE_VOIT']?></label>
-    <?php } ?>
+  <div class="col-md-2">
+    <select class="form-control" required name="type">
+      <option disabled selected value="">Types</option>
+      <?php foreach($type as $types) { ?>
+      <option value="<?=$types['Nom']?>">
+        <?=$types['Nom']?>
+      </option>
+      <?php } ?>
+    </select>
   </div>
-  <div class="col-md-3">
-    <?php foreach($res as $agences) { ?>
-    <label><?=$agences['idAGENCE']?></label>
-    <?php } ?>
+  <div class="col-md-2">
+    <select class="form-control" required name="agence">
+      <option disabled selected value="">Agences</option>
+      <?php foreach($agence as $agences) { ?>
+      <option value="<?=$agences['Nom']?>">
+        <?=$agences['Nom']?>
+      </option>
+      <?php } ?>
+    </select>
   </div>
-  <div class="col-md-3">
-    <?php foreach($res as $img) { ?>
-      <label><?=$img['Image']?></label>
-    <?php } ?>
+  <div class="col-md-4">
+    <div class="form-group">
+      <input type="file" class="form-control-file border" name="image"/>
+    </div>
+  </div>
+  <div class="form-check ckbox">
+    <input class="form-check-input" id="check" type="checkbox" name="choice" value="<?=$Search['idVOITURE']?>">
+    <label for="check">Cocher puis valider</label>
+  </div>
+  <div class="col-md-2">
+    <input class="btn btn-danger" type="submit" value="Valider"/>
   </div>
 </div>
-
-<form enctype="multipart/form-data" action="traitModif.php" method="post">
-  <div class="row">
-    <div class="col-md-2">
-      <?php foreach($res as $id) { ?>
-        <input class="form-control" type="text" name="id" value="<?=$marque['idVOITURE']?>"><br>
-      <?php } ?>
-    </div>
-    <div class="col-md-2">
-      <?php foreach($res as $marque) { ?>
-        <input class="form-control" type="text" name="marque" value="<?=$marque['Marque']?>"><br>
-      <?php } ?>
-    </div>
-    <div class="col-md-2">
-      <select class="form-control" required name="type">
-        <option disabled selected value="">Types</option>
-        <?php foreach($res as $types) { ?>
-        <option value="<?=$types['idTYPE_VOIT']?>">
-          <?=$types['idTYPE_VOIT']?>
-        </option>
-        <?php } ?>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <select class="form-control" required name="agence">
-        <option disabled selected value="">Agences</option>
-        <?php foreach($res as $agences) { ?>
-        <option value="<?=$agences['idAGENCE']?>">
-          <?=$agences['idAGENCE']?>
-        </option>
-        <?php } ?>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <?php foreach($res as $img) { ?>
-        <input class="form-control" type="text" name="image" value="<?=$img['Image']?>"><br>
-      <?php } ?>
-    </div>
-    <div class="col-md-12 d-flex justify-content-end">
-      <input class="btn btn-danger btnEdit" type="submit" value="Valider"/>
-    </div>
-  </div>
 </form>
 
 <?php
 
-if (isset($_POST['marque'])){
-  if (isset($_POST['image'])){
-    if (isset($_POST['id'])){
-      //Filtre les données entrées
-      $filtreMarque = filter_var($_POST['marque'], FILTER_SANITIZE_STRING);
-      $filtreImage = filter_var($_POST['image'], FILTER_SANITIZE_STRING);
-
-      $resType = ($_POST['type']);
-      $resAgence = ($_POST['agence']);
-      $id = ($_POST['id']);
-
-      $idType = selectTypeId($resType);
-      $idAgence = selectAgenceId($resAgence);
-    //  $idVoit = selectVoitIdComplexe($id)
-
-      foreach ($idAgence as $value1) {
-      foreach ($idType as $value2) {
-    //  foreach ($idVoit as $value3) {
-
-        $tabUp = array(
-          ':marque'  => $filtreMarque,
-          ':idAgence'  => $value1,
-          ':idType'  => $value2,
-          ':image'  => $filtreImage,
-          ':idVoit'  => $value3
-        );
-      }
-
-      $verif = selectVoitIdComplexe($filtreMarque, $value1, $value2, $filtreImage, $value3);
+if (isset($_FILES['image']) && $_FILES['image']['error'] == 0)
+{
+// Testons si le fichier n'est pas trop gros
+  if ($_FILES['image']['size'] <= 1000000)
+  {
+    // Testons si l'extension est autorisée
+    $infosfichier = pathinfo($_FILES['image']['name']);
+    $extension_upload = $infosfichier['extension'];
+    $extensions_autorisees = array('jpg', 'jpeg', 'gif', 'png');
+    if (in_array($extension_upload, $extensions_autorisees))
+    {
+      // On peut valider le fichier et le stocker définitivement
+      move_uploaded_file($_FILES['image']['tmp_name'], 'assets/img/' . basename($_FILES['image']['name']));
     }
   }
 }
-print_r($verif); // Vérification nickel :)
-  }
+
+if (isset($_POST['marque'])){
+  //Filtre les données entrées
+
+  $filtreInput = filter_var($_POST['marque'], FILTER_SANITIZE_STRING);
+
+  $images = basename($_FILES['image']['name']);
+
+  $resType = $_POST['type'];
+  $resAgence = $_POST['agence'];
+  $resChoix = $_POST['choice'];
+
+    $tabs = array(
+        ':marque'  => $filtreInput,
+        ':agence' => $resAgence,
+        ':type' => $resType,
+        ':image' => $images,
+        ':idVoit' => $resChoix
+    );
+
+  updateVoiture($filtreInput, $resAgence, $resType, $images, $resChoix);
+  //print_r($_POST); // Oufffff Enfin ! Happy :D
+}
 
 ?>
 

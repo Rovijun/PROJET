@@ -84,7 +84,7 @@
 
 // MANIPULATIONS DES ID
   // REcup avec les id
-  function selectVoitIdSimple($input){
+  /*function selectVoitIdSimple($input){
     $bdd = connectDB();
     //recup idAgence
     $sql = 'SELECT idVOITURE FROM VOITURE WHERE Marque = :marque';
@@ -94,7 +94,7 @@
     $results = $req->fetchAll(PDO::FETCH_COLUMN);
     $req->closeCursor();
     return $results;
-  }
+  }*/
 
   function selectAgenceId($input1){
     $bdd = connectDB();
@@ -219,17 +219,17 @@
     $bdd = connectDB();
     //Update Voit
     $sql = 'UPDATE VOITURE SET VOITURE.Marque = :marque,
-      VOITURE.idAGENCE = (SELECT idAGENCE FROM AGENCE WHERE idAGENCE = :idAgence),
-      VOITURE.idTYPE_VOIT = (SELECT idTYPE_VOIT FROM TYPE_VOITURE WHERE idTYPE_VOIT = :idType),
+      VOITURE.idAGENCE = (SELECT idAGENCE FROM AGENCE WHERE AGENCE.Nom = :agence),
+      VOITURE.idTYPE_VOIT = (SELECT idTYPE_VOIT FROM TYPE_VOITURE WHERE TYPE_VOITURE.Nom = :type),
       VOITURE.Image = :image WHERE VOITURE.idVOITURE = :idVoit';
     $req = $bdd->prepare($sql);
     $req->bindParam(':marque', $input, PDO::PARAM_STR);
-    $req->bindParam(':idAgence', $input1, PDO::PARAM_INT);
-    $req->bindParam(':idType', $input2, PDO::PARAM_INT);
+    $req->bindParam(':agence', $input1, PDO::PARAM_STR);
+    $req->bindParam(':type', $input2, PDO::PARAM_STR);
     $req->bindParam(':image', $input3, PDO::PARAM_STR);
     $req->bindValue(':idVoit', $input4, PDO::PARAM_INT);
     $req->execute();
-    $results = $req->fetchAll(PDO::FETCH_ASSOC);
+    $results = $req->fetchAll();
     $req->closeCursor();
     return $results;
   }

@@ -8,6 +8,12 @@
   //recup Voiture
   $voiture = afficheVoitureAll();
 
+  //$voit = afficheVoiture();
+  //recup Voiture
+  $agence = afficheAgence();
+  $type = afficheType();
+  $image = afficheImage();
+
 ?>
 
 <form class="" action="traitModif.php" method="post">
