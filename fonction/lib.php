@@ -176,7 +176,7 @@
         || VOITURE.Image LIKE :recherche)';
     $req = $bdd->prepare($sql);
     $req->bindParam(':recherche', $input, PDO::PARAM_STR);
-    $req->execute();
+    $req->execute(array(':recherche' => '%'.$input.'%'));
     $results = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
     return $results;
