@@ -84,6 +84,18 @@
 
 // MANIPULATIONS DES ID
   // REcup avec les id
+  function selectVoitIdSimple($input){
+    $bdd = connectDB();
+    //recup idAgence
+    $sql = 'SELECT idVOITURE FROM VOITURE WHERE Marque = :marque';
+    $req = $bdd->prepare($sql);
+    $req->bindParam(':marque', $input, PDO::PARAM_STR);
+    $req->execute();
+    $results = $req->fetchAll(PDO::FETCH_COLUMN);
+    $req->closeCursor();
+    return $results;
+  }
+
   function selectAgenceId($input1){
     $bdd = connectDB();
     //recup idAgence
@@ -125,7 +137,7 @@
     $req->bindParam(':idType', $arg2, PDO::PARAM_INT);
     $req->bindParam(':image', $arg3, PDO::PARAM_STR);
     $req->execute();
-    $results = $req->fetchAll(PDO::FETCH_COLUMN);
+    $results = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
     return $results;
   }
@@ -133,7 +145,13 @@
   //Recup Row TAble Voiture
   function selectVoitAll($input4){
     $bdd = connectDB();
-    $sql = 'SELECT * FROM VOITURE WHERE idVOITURE = :idVoit';
+    $sql = 'SELECT VOITURE.idVOITURE, VOITURE.Marque, AGENCE.Nom AS Agence,
+      TYPE_VOITURE.Nom AS Type, VOITURE.Image
+      FROM VOITURE INNER JOIN AGENCE
+      ON AGENCE.idAGENCE = VOITURE.idAGENCE
+      INNER JOIN TYPE_VOITURE
+      ON TYPE_VOITURE.idTYPE_VOIT = VOITURE.idTYPE_VOIT
+      WHERE idVOITURE = :idVoit';
     $req = $bdd->prepare($sql);
     $req->bindParam(':idVoit', $input4, PDO::PARAM_STR);
     $req->execute();
