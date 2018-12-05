@@ -82,20 +82,6 @@
     return $results;
   }
 
-// MANIPULATIONS DES ID
-  // REcup avec les id
-  /*function selectVoitIdSimple($input){
-    $bdd = connectDB();
-    //recup idAgence
-    $sql = 'SELECT idVOITURE FROM VOITURE WHERE Marque = :marque';
-    $req = $bdd->prepare($sql);
-    $req->bindParam(':marque', $input, PDO::PARAM_STR);
-    $req->execute();
-    $results = $req->fetchAll(PDO::FETCH_COLUMN);
-    $req->closeCursor();
-    return $results;
-  }*/
-
   function selectAgenceId($input1){
     $bdd = connectDB();
     //recup idAgence
@@ -120,30 +106,8 @@
     return $results;
   }
 
-  // REcup IdVoiture avec Jointure
-  function selectVoitIdComplexe($arg, $arg1, $arg2, $arg3){
-    $bdd = connectDB();
-    //recup idVOITURE
-    $sql = 'SELECT VOITURE.idVOITURE FROM VOITURE
-      INNER JOIN AGENCE ON AGENCE.idAGENCE = VOITURE.idAGENCE
-      INNER JOIN TYPE_VOITURE ON TYPE_VOITURE.idTYPE_VOIT = VOITURE.idTYPE_VOIT
-      WHERE VOITURE.Marque = :marque
-        && VOITURE.idAGENCE = :idAgence
-        && VOITURE.idTYPE_VOIT = :idType
-        && VOITURE.Image = :image';
-    $req = $bdd->prepare($sql);
-    $req->bindParam(':marque', $arg, PDO::PARAM_STR);
-    $req->bindParam(':idAgence', $arg1, PDO::PARAM_INT);
-    $req->bindParam(':idType', $arg2, PDO::PARAM_INT);
-    $req->bindParam(':image', $arg3, PDO::PARAM_STR);
-    $req->execute();
-    $results = $req->fetchAll(PDO::FETCH_ASSOC);
-    $req->closeCursor();
-    return $results;
-  }
-
   //Recup Row TAble Voiture
-  function selectVoitAll($input4){
+  function selectVoitAll($input3){
     $bdd = connectDB();
     $sql = 'SELECT VOITURE.idVOITURE, VOITURE.Marque, AGENCE.Nom AS Agence,
       TYPE_VOITURE.Nom AS Type, VOITURE.Image
@@ -153,7 +117,7 @@
       ON TYPE_VOITURE.idTYPE_VOIT = VOITURE.idTYPE_VOIT
       WHERE idVOITURE = :idVoit';
     $req = $bdd->prepare($sql);
-    $req->bindParam(':idVoit', $input4, PDO::PARAM_STR);
+    $req->bindParam(':idVoit', $input3, PDO::PARAM_STR);
     $req->execute();
     $results = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
