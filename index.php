@@ -15,7 +15,7 @@ $log->pushHandler($streamHandler);
 $log->warning('une entree de type warning');
 $log->error('une entree warning');
 ?>
-
+<!--test3-->
 <!-- HEADER -->
 <?php
     include "template/header.php";
