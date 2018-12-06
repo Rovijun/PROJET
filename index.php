@@ -1,4 +1,23 @@
 <?php
+require 'vendor/autoload.php';
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+/*test 2 suite*/
+/* ESSAI DE MONOLOG */
+//creer un logger
+$log = new Monolog\Logger('name');
+//creer un streamhandler
+$streamHandler = new Monolog\Handler\StreamHandler('journal.log', Logger::WARNING);
+//associer handler et logger
+$log->pushHandler($streamHandler);
+
+//on est pret pour utiliser notre loger
+$log->warning('une entree de type warning');
+$log->error('une entree warning');
+?>
+
+<!-- HEADER -->
+<?php
     include "template/header.php";
     include "template/menu.php";
 ?>
